@@ -37,21 +37,13 @@
 
 #include <QDBusConnection>
 #include <QDBusInterface>
+#include <QX11Info>
+#include <X11/Xcursor/Xcursor.h>
 
 #include <kiconloader.h>
 #include <kconfiggroup.h>
 #include <ksharedconfig.h>
 #include <kcolorscheme.h>
-
-#include <config-platformtheme.h>
-#ifdef UNIT_TEST
-#undef HAVE_X11
-#define HAVE_X11 0
-#endif
-#if HAVE_X11
-#include <QX11Info>
-#include <X11/Xcursor/Xcursor.h>
-#endif
 
 static const QString defaultLookAndFeelPackage = QStringLiteral("org.kde.breeze.desktop");
 
@@ -91,7 +83,7 @@ KHintsSettings::KHintsSettings(KSharedConfig::Ptr kdeglobals)
     m_hints[QPlatformTheme::IconThemeSearchPaths] = xdgIconThemePaths();
 
     QStringList styleNames{
-        QStringLiteral(BREEZE_STYLE_NAME),
+        QStringLiteral("breeze"),
         QStringLiteral("oxygen"),
         QStringLiteral("fusion"),
         QStringLiteral("windows")
@@ -276,7 +268,7 @@ void KHintsSettings::slotNotifyChange(int type, int arg)
 
         QStringList styleNames;
         styleNames << cg.readEntry("widgetStyle", QString())
-                << QStringLiteral(BREEZE_STYLE_NAME)
+                << QStringLiteral("breeze")
                 << QStringLiteral("oxygen")
                 << QStringLiteral("fusion")
                 << QStringLiteral("windows");
@@ -405,7 +397,6 @@ void KHintsSettings::updateCursorTheme()
         }
     }
 
-#if HAVE_X11
     if (QX11Info::isPlatformX11()) {
         const QString theme = g.readEntry("cursorTheme", QString());
         // Note that in X11R7.1 and earlier, calling XcursorSetTheme()
@@ -416,5 +407,4 @@ void KHintsSettings::updateCursorTheme()
                         "default" : QFile::encodeName(theme).constData());
         XcursorSetDefaultSize(QX11Info::display(), size);
     }
-#endif
 }

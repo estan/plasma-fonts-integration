@@ -23,18 +23,13 @@
 
 #include <qpa/qplatformtheme.h>
 
-#include <QHash>
-#include <QObject>
-#include <QKeySequence>
+#include "khintssettings.h"
 
-class KHintsSettings;
 class KFontSettingsData;
-class KWaylandIntegration;
-class X11Integration;
-class QIconEngine;
-class QWindow;
-
-class AltKeyEventListener;
+class QFont;
+class QKeySequence;
+class QSizeF;
+class QString;
 
 class KdePlatformTheme : public QPlatformTheme
 {
@@ -42,33 +37,30 @@ public:
     KdePlatformTheme();
     ~KdePlatformTheme();
 
-    QVariant themeHint(ThemeHint hint) const Q_DECL_OVERRIDE;
-    const QPalette *palette(Palette type = SystemPalette) const Q_DECL_OVERRIDE;
     const QFont *font(Font type) const Q_DECL_OVERRIDE;
-    QIconEngine *createIconEngine(const QString &iconName) const Q_DECL_OVERRIDE;
-    QList<QKeySequence> keyBindings(QKeySequence::StandardKey key) const Q_DECL_OVERRIDE;
-
-    QPlatformDialogHelper *createPlatformDialogHelper(DialogType type) const Q_DECL_OVERRIDE;
-    bool usePlatformNativeDialog(DialogType type) const Q_DECL_OVERRIDE;
-
-    QString standardButtonText(int button) const Q_DECL_OVERRIDE;
-
-    QPlatformSystemTrayIcon *createPlatformSystemTrayIcon() const Q_DECL_OVERRIDE;
-
-#if QT_VERSION >= QT_VERSION_CHECK(5,7,0)
-    QPlatformMenuBar *createPlatformMenuBar() const Q_DECL_OVERRIDE;
-#endif
 
 private:
     void loadSettings();
 
-    static void setWindowProperty(QWindow *window, const QByteArray &name, const QByteArray &value);
-
-    KHintsSettings *m_hints;
     KFontSettingsData *m_fontsData;
-    QScopedPointer<KWaylandIntegration> m_kwaylandIntegration;
-    QScopedPointer<X11Integration> m_x11Integration;
+    KHintsSettings *m_hints;
 
+    // QPlatformTheme interface
+public:
+    virtual QPlatformMenuItem *createPlatformMenuItem() const Q_DECL_OVERRIDE;
+    virtual QPlatformMenu *createPlatformMenu() const Q_DECL_OVERRIDE;
+    virtual QPlatformMenuBar *createPlatformMenuBar() const Q_DECL_OVERRIDE;
+    virtual void showPlatformMenuBar() Q_DECL_OVERRIDE;
+    virtual bool usePlatformNativeDialog(DialogType type) const Q_DECL_OVERRIDE;
+    virtual QPlatformDialogHelper *createPlatformDialogHelper(DialogType type) const Q_DECL_OVERRIDE;
+    virtual QPlatformSystemTrayIcon *createPlatformSystemTrayIcon() const Q_DECL_OVERRIDE;
+    virtual const QPalette *palette(Palette type) const Q_DECL_OVERRIDE;
+    virtual QVariant themeHint(ThemeHint hint) const Q_DECL_OVERRIDE;
+    virtual QPixmap standardPixmap(StandardPixmap sp, const QSizeF &size) const Q_DECL_OVERRIDE;
+    virtual QPixmap fileIconPixmap(const QFileInfo &fileInfo, const QSizeF &size, QPlatformTheme::IconOptions iconOptions) const Q_DECL_OVERRIDE;
+    virtual QIconEngine *createIconEngine(const QString &iconName) const Q_DECL_OVERRIDE;
+    virtual QList<QKeySequence> keyBindings(QKeySequence::StandardKey key) const Q_DECL_OVERRIDE;
+    virtual QString standardButtonText(int button) const Q_DECL_OVERRIDE;
 };
 
 #endif // KDEPLATFORMTHEME_H
