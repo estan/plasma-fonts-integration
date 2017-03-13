@@ -23,18 +23,13 @@
 
 #include <qpa/qplatformtheme.h>
 
-#include <QHash>
-#include <QObject>
-#include <QKeySequence>
+#include "khintssettings.h"
 
-class KHintsSettings;
 class KFontSettingsData;
-class KWaylandIntegration;
-class X11Integration;
-class QIconEngine;
-class QWindow;
-
-class AltKeyEventListener;
+class QFont;
+class QKeySequence;
+class QSizeF;
+class QString;
 
 class KdePlatformTheme : public QPlatformTheme
 {
@@ -64,13 +59,8 @@ private:
     void loadSettings();
     void setQtQuickControlsTheme();
 
-    static void setWindowProperty(QWindow *window, const QByteArray &name, const QByteArray &value);
-
-    KHintsSettings *m_hints;
     KFontSettingsData *m_fontsData;
-    QScopedPointer<KWaylandIntegration> m_kwaylandIntegration;
-    QScopedPointer<X11Integration> m_x11Integration;
-
+    KHintsSettings *m_hints;
 };
 
 #endif // KDEPLATFORMTHEME_H
